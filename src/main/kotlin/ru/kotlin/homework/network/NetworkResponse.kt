@@ -2,38 +2,28 @@
 
 package ru.kotlin.homework.network
 
-import java.lang.Exception
-import java.lang.IllegalArgumentException
 import java.time.LocalDateTime
 
 /**
  * Network result
  */
-sealed class NetworkResponse<T, R> {
+sealed class NetworkResponse<out T, out R> {
     val responseDateTime: LocalDateTime = LocalDateTime.now()
 }
 
 /**
  * Network success
  */
-data class Success<T, R>(val resp: T): NetworkResponse<T, R>()
+data class Success<out T>(val resp: T): NetworkResponse<T, Nothing>()
 
 /**
  * Network error
  */
-data class Failure<T, R>(val error: R): NetworkResponse<T, R>()
+data class Failure<out R>(val error: R): NetworkResponse<Nothing, R>()
 
 val s1 = Success("Message")
 val r11: NetworkResponse<String, Error> = s1
 val r12: NetworkResponse<Any, Error> = s1
-
-val s2 = Success("Message")
-val r21: NetworkResponse<String, Exception> = s2
-val r22: NetworkResponse<Any, Exception> = s2
-
-val s3 = Success(String())
-val r31: Success<CharSequence> = s3
-val r32: Success<Any> = s3
 
 val e = Failure(Error())
 val er1: NetworkResponse<String, Error> = e
